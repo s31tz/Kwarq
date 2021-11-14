@@ -75,7 +75,11 @@ sub new {
 
 =head2 Datenbank-Operationen
 
+<<<<<<< HEAD
 =head3 exec() - Führe beliebiges SQL aus
+=======
+=head3 exec() - Führe SQL aus
+>>>>>>> 1a42279900714bb7fc79154aa3db5c107dadeacd
 
 =head4 Synopsis
 
