@@ -1,12 +1,3 @@
-package Kwarq::Database::Row;
-use base qw/Kwarq::Hash/;
-
-use v5.10;
-use strict;
-use warnings;
-
-our $VERSION = '0.001';
-
 # -----------------------------------------------------------------------------
 
 =encoding utf8
@@ -22,6 +13,21 @@ L<Kwarq::Hash>
 =head1 DESCRIPTION
 
 Ein Objekt der Klasse repräsentiert einen Datensatz.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+package Kwarq::Database::Row;
+use base qw/Kwarq::Hash/;
+
+use v5.10;
+use strict;
+use warnings;
+
+our $VERSION = '0.001';
+
+# -----------------------------------------------------------------------------
 
 =head1 METHODS
 

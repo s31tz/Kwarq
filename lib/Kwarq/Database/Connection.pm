@@ -1,14 +1,3 @@
-package Kwarq::Database::Connection;
-use base qw/Kwarq::Hash/;
-
-use v5.10;
-use strict;
-use warnings;
-
-our $VERSION = '0.001';
-
-use Kwarq::Database::Row;
-
 # -----------------------------------------------------------------------------
 
 =encoding utf8
@@ -25,6 +14,23 @@ L<Kwarq::Hash>
 
 Ein Objekt der Klasse repräsentiert eine Datenbankverbindung
 über die DBI-Schnittstelle.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+package Kwarq::Database::Connection;
+use base qw/Kwarq::Hash/;
+
+use v5.10;
+use strict;
+use warnings;
+
+our $VERSION = '0.001';
+
+use Kwarq::Database::Row;
+
+# -----------------------------------------------------------------------------
 
 =head1 METHODS
 
@@ -75,7 +81,7 @@ sub new {
 
 =head2 Datenbank-Operationen
 
-=head3 exec() - Führe SQL aus
+=head3 exec() - Führe beliebiges SQL aus
 
 =head4 Synopsis
 
