@@ -1,11 +1,3 @@
-package Kwarq::String;
-
-use v5.10;
-use strict;
-use warnings;
-
-our $VERSION = '0.001';
-
 # -----------------------------------------------------------------------------
 
 =encoding utf8
@@ -17,6 +9,20 @@ Kwarq::String - String-Operationen
 =head1 DESCRIPTION
 
 Diese Klasse enthält Methoden zur Manipulation von Strings.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+package Kwarq::String;
+
+use v5.10;
+use strict;
+use warnings;
+
+our $VERSION = '0.001';
+
+# -----------------------------------------------------------------------------
 
 =head1 METHODS
 
