@@ -6,6 +6,10 @@
 
 Kwarq::String - String-Operationen
 
+=head1 BASE CLASS
+
+L<Kwarq::Object>
+
 =head1 DESCRIPTION
 
 Diese Klasse enthält Methoden zur Manipulation von Strings.
@@ -15,6 +19,7 @@ Diese Klasse enthält Methoden zur Manipulation von Strings.
 # -----------------------------------------------------------------------------
 
 package Kwarq::String;
+use base qw/Kwarq::Object/;
 
 use v5.10;
 use strict;
