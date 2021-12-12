@@ -6,6 +6,10 @@
 
 Kwarq::Hash - Hash mit geschützten Keys
 
+=head1 REVISION
+
+$Id: $
+
 =head1 BASE CLASS
 
 L<Kwarq::Object>

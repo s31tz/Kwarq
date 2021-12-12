@@ -6,6 +6,10 @@
 
 Kwarq::Database::Connection - Datenbank-Verbindung
 
+=head1 REVISION
+
+$Id: $
+
 =head1 BASE CLASS
 
 L<Kwarq::Hash>

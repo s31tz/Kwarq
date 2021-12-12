@@ -6,6 +6,10 @@
 
 Kwarq::Database::Row - Datensatz
 
+=head1 REVISION
+
+$Id: $
+
 =head1 BASE CLASS
 
 L<Kwarq::Hash>

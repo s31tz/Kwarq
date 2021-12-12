@@ -6,6 +6,10 @@
 
 Kwarq::Object - Basisklasse aller Klassen einer Klassenbibliothek
 
+=head1 REVISION
+
+$Id: $
+
 =head1 SYNOPSIS
 
   package MyClass;

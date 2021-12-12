@@ -6,6 +6,10 @@
 
 Kwarq::String - String-Operationen
 
+=head1 REVISION
+
+$Id: $
+
 =head1 BASE CLASS
 
 L<Kwarq::Object>
