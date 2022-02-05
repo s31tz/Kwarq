@@ -33,6 +33,7 @@ use warnings;
 our $VERSION = '0.001';
 
 use Kwarq::Database::Row;
+use Kwarq::Database::ResultSet;
 
 # -----------------------------------------------------------------------------
 
@@ -136,15 +137,16 @@ sub exec {
 =head4 Synopsis
 
   @rows = $db->select($sql);
+  $tab = $db->select($sql);
 
 =head4 Returns
 
-Liste von Datensätzen
+Liste von Datensätzen. Im Skalarkontext liefere ein Ergebnismengen-Objekt.
 
 =head4 Description
 
 Selektiere mit Statement $sql Datensätze von der Datenbank und liefere
-diese zurück.
+diese in einer Liste oder als Ergebnismengen-Objekt zurück.
 
 =cut
 
@@ -162,7 +164,11 @@ sub select {
         push @rows,Kwarq::Database::Row->new($h);
     }
 
-    return @rows;
+    if (wantarray) {
+        return @rows;
+    }
+
+    return Kwarq::Database::ResultSet->new($sth->{'NAME_lc'},\@rows);
 }
 
 # -----------------------------------------------------------------------------
@@ -296,7 +302,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2021 Frank Seitz
+Copyright (C) 2022 Frank Seitz
 
 =head1 LICENSE
 
