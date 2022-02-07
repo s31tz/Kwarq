@@ -70,6 +70,31 @@ sub new {
 
 =head2 Objektmethoden
 
+=head3 count() - Anzahl der Datensätze
+
+=head4 Synopsis
+
+  $n = $tab->count;
+
+=head4 Returns
+
+(Integer) Anzahl Datensätze.
+
+=head4 Description
+
+Liefere die Anzahl der Datensätze der Ergebnismenge.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub count {
+    my $self = shift;
+    return scalar @{$self->{'rowA'}};
+}
+
+# -----------------------------------------------------------------------------
+
 =head3 rows() - Liste der Datensätze
 
 =head4 Synopsis
@@ -92,31 +117,6 @@ Liefere die Liste der Datensätze der Ergebnismenge.
 sub rows {
     my $self = shift;
     return wantarray? @{$self->{'rowA'}}: $self->{'rowA'};
-}
-
-# -----------------------------------------------------------------------------
-
-=head3 count() - Anzahl der Datensätze
-
-=head4 Synopsis
-
-  $n = $tab->count;
-
-=head4 Returns
-
-(Integer) Anzahl Datensätze.
-
-=head4 Description
-
-Liefere die Anzahl der Datensätze der Ergebnismenge.
-
-=cut
-
-# -----------------------------------------------------------------------------
-
-sub count {
-    my $self = shift;
-    return scalar @{$self->{'rowA'}};
 }
 
 # -----------------------------------------------------------------------------
