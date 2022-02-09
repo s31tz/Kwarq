@@ -32,6 +32,7 @@ use warnings;
 
 our $VERSION = '0.001';
 
+use Kwarq::String;
 use Kwarq::Database::Row;
 use Kwarq::Database::ResultSet;
 
@@ -86,7 +87,7 @@ sub new {
 
 =head2 Datenbank-Operationen
 
-=head3 exec() - Führe beliebiges SQL aus
+=head3 exec() - Führe SQL-Statement aus
 
 =head4 Synopsis
 
@@ -109,7 +110,8 @@ Führe SQL-Statement $sql aus und liefere díe Statement-Handle zurück.
 # -----------------------------------------------------------------------------
 
 sub exec {
-    my ($self,$sql) = @_;
+    my $self = shift;
+    my $sql = Kwarq::String->unindent(shift);
 
     my $dbh = $self->{'dbh'};
 
@@ -153,7 +155,8 @@ diese in einer Liste oder als Ergebnismengen-Objekt zurück.
 # -----------------------------------------------------------------------------
 
 sub select {
-    my ($self,$sql) = @_;
+    my $self = shift;
+    my $sql = Kwarq::String->unindent(shift);
 
     my @rows;
     my $sth = $self->exec($sql);
@@ -168,7 +171,7 @@ sub select {
         return @rows;
     }
 
-    return Kwarq::Database::ResultSet->new($sth->{'NAME_lc'},\@rows);
+    return Kwarq::Database::ResultSet->new($sth->{'NAME_lc'},\@rows,$sql);
 }
 
 # -----------------------------------------------------------------------------

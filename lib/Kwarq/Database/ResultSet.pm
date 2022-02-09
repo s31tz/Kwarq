@@ -58,11 +58,12 @@ auf dieses Objekt zurück.
 # -----------------------------------------------------------------------------
 
 sub new {
-    my ($class,$titleA,$rowA) = @_;
+    my ($class,$titleA,$rowA,$stmt) = @_;
 
     return $class->SUPER::new(
         titleA => $titleA,
         rowA => $rowA,
+        stmt => $stmt,
     );
 }
 
@@ -118,6 +119,28 @@ sub rows {
     my $self = shift;
     return wantarray? @{$self->{'rowA'}}: $self->{'rowA'};
 }
+
+# -----------------------------------------------------------------------------
+
+=head3 stmt() - SQL-Statement
+
+=head4 Synopsis
+
+  $stmt = $tab->stmt;
+
+=head4 Returns
+
+(String) SQL-Statement
+
+=head4 Description
+
+Liefere das SQL-Statement, das die Ergebnismenge selektiert hat.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+# Kein Code, da automatisch erzeugte Attributmethode
 
 # -----------------------------------------------------------------------------
 
