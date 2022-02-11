@@ -247,7 +247,7 @@ sub value {
         die "ERROR: More than one value found\n";
     }
 
-    return $values[0];
+    return $values[0] // '';
 }
 
 # -----------------------------------------------------------------------------
