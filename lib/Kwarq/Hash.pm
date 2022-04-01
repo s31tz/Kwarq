@@ -146,6 +146,99 @@ sub get {
 
 # -----------------------------------------------------------------------------
 
+=head3 set() - Setze Schlüssel/Wert-Paare
+
+=head4 Synopsis
+
+  $h->set(@keyVal);
+
+=head4 Description
+
+Setze die angegebenen Schlüssel/Wert-Paare.
+
+Alternative Formulierung:
+
+  $h->{$key} = $val;    # ein Schlüssel/Wert-Paar
+  @{$h}{@keys} = @vals; # mehrere Schlüssel/Wert-Paare
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub set {
+    my $self = shift;
+    # @_: @keyVal
+
+    while (@_) {
+        my $key = shift;
+        $self->{$key} = shift;
+    }
+
+    return;
+}
+
+# -----------------------------------------------------------------------------
+
+=head3 lockKeys() - Sperre Hash
+
+=head4 Synopsis
+
+  $h = $h->lockKeys;
+
+=head4 Description
+
+Sperre den Hash. Anschließend kann kein weiterer Schlüssel zugegriffen
+werden. Wird dies versucht, wird eine Exception geworfen.
+
+Alternative Formulierung:
+
+  Hash::Util::lock_keys(%$h);
+
+Die Methode liefert eine Referenz auf den Hash zurück.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub lockKeys {
+    my $self = shift;
+    Hash::Util::lock_keys(%$self);
+    return $self;
+}
+
+# -----------------------------------------------------------------------------
+
+=head3 unlockKeys() - Entsperre Hash
+
+=head4 Synopsis
+
+  $h = $h->unlockKeys;
+
+=head4 Description
+
+Entsperre den Hash. Anschließend kann der Hash uneingeschränkt
+manipuliert werden. Die Methode liefert eine Referenz auf den Hash
+zurück. Damit kann der Hash gleich nach der Instantiierung
+entsperrt werden:
+
+  return Kwarq::Hash->new(...)->unlockKeys;
+
+Alternative Formulierung:
+
+  Hash::Util::unlock_keys(%$h);
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub unlockKeys {
+    my $self = shift;
+    Hash::Util::unlock_keys(%$self);
+    return $self;
+}
+
+# -----------------------------------------------------------------------------
+
 =head2 Automatische Akzessor-Methoden
 
 =head3 AUTOLOAD() - Erzeuge Akzessor-Methode
@@ -248,7 +341,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2021 Frank Seitz
+Copyright (C) 2022 Frank Seitz
 
 =head1 LICENSE
 

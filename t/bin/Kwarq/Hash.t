@@ -38,6 +38,63 @@ sub test_get : Test(5) {
 
 # -----------------------------------------------------------------------------
 
+sub test_set : Test(5) {
+    my $self = shift;
+
+    my $h = Kwarq::Hash->new(a=>1,b=>2,c=>3);
+
+    $h->set(b=>5);
+    $self->is($h->{'b'},5);
+
+    $h->{'b'} = 5;
+    $self->is($h->{'b'},5);
+
+    @{$h}{'b','c'} = (6,7);
+    $self->is($h->{'b'},6);
+    $self->is($h->{'c'},7);
+
+    eval {$h->set(d=>7)};
+    $self->ok($@);
+}
+
+# -----------------------------------------------------------------------------
+
+sub test_lockKeys : Test(2) {
+    my $self = shift;
+
+    my $h = Kwarq::Hash->new(a=>1,b=>2,c=>3);
+
+    $h->lockKeys;
+
+    my $val = $h->{'b'};
+    $self->is($val,2,'Key b');
+
+    $val = eval {$h->{'d'}};
+    $self->like($@,qr/disallowed key 'd'/,'Key d - Exception');
+}
+
+# -----------------------------------------------------------------------------
+
+sub test_unlockKeys : Test(3) {
+    my $self = shift;
+
+    my $h = Kwarq::Hash->new(a=>1,b=>2,c=>3);
+    $h->lockKeys;
+
+    my $val = $h->{'b'};
+    $self->is($val,2,'Key b');
+
+    $val = eval { $h->{'d'} };
+    $self->like($@,qr/disallowed key 'd'/,'Key d - Exception');
+
+    $h->unlockKeys;
+
+    $val = $h->{'d'};
+    $self->is($val,undef,'Key d - undef');
+}
+
+# -----------------------------------------------------------------------------
+
 sub test_AUTOLOAD : Test(3) {
     my $self = shift;
 
