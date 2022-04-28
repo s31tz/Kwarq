@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Kwarq::Object - Basisklasse aller Klassen einer Klassenbibliothek
+Kwarq::Object - Basisklasse aller Klassen
 
 =head1 REVISION
 
@@ -229,7 +229,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2021 Frank Seitz
+Copyright (C) 2022 Frank Seitz
 
 =head1 LICENSE
 
