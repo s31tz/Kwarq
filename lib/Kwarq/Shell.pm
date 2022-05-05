@@ -68,7 +68,32 @@ sub new {
 
 =head4 Synopsis
 
+  $stdout = $this->exec($cmd);
   ($stdout,$stderr) = $this->exec($cmd);
+
+=head4 Arguments
+
+=over 4
+
+=item $cmd
+
+Das auszuführende Shell-Kommando.
+
+=back
+
+=head4 Returns
+
+=over 4
+
+=item $stdout
+
+Die Ausgabe des Kommandos auf STDOUT.
+
+=item $stderr
+
+Die Ausgabe des Kommandos auf STDERR.
+
+=back
 
 =head4 Description
 
@@ -91,10 +116,14 @@ sub exec {
     $this->check($?,$cmd);
 
     my $p = Kwarq::Path->new;
-    my $stdout = $p->read($stdoutFile);
-    my $stderr = $p->read($stderrFile);
 
-    return ($stdout,$stderr);
+    my $stdout = $p->read($stdoutFile);
+    if (wantarray) {
+        my $stderr = $p->read($stderrFile);
+        return ($stdout,$stderr);
+    }
+
+    return $stdout;
 }
 
 # -----------------------------------------------------------------------------
