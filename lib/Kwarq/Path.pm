@@ -45,13 +45,13 @@ use Kwarq::Shell;
 
 =head4 Returns
 
-Path-Objekt
+Objekt
 
 =head4 Description
 
 Instantiiere ein Objekt der Klasse und liefere eine Referenz auf
 dieses Objekt zurück. Da die Klasse ausschließlich Klassenmethoden
-enthält, hat das Objekt die Funktion, eine abkürzende
+enthält, hat das Objekt lediglich die Aufgabe, eine abkürzende
 Aufrufschreibweise zu ermöglichen.
 
 =cut
@@ -72,6 +72,20 @@ sub new {
 =head4 Synopsis
 
   $data = $this->read($file);
+
+=head4 Arguments
+
+=over 4
+
+=item $file
+
+(String) Datei, die gelesen werden soll.
+
+=back
+
+=head4 Returns
+
+(String) Inhalt der Datei.
 
 =head4 Description
 
@@ -94,9 +108,23 @@ sub read {
 
 =head4 Synopsis
 
-  $this->write($file); # leere Datei
+  $this->write($file); # erzeuge leere Datei
   $this->write($file,$data);
   $this->write($file,\$data);
+
+=head4 Arguments
+
+=over 4
+
+=item $file
+
+(String) Datei, die geschrieben werden soll.
+
+=item $data
+
+(String) Inhalt der Datei.
+
+=back
 
 =head4 Description
 
@@ -127,10 +155,20 @@ sub write {
 
   $this->mkdir($dir);
 
+=head4 Arguments
+
+=over 4
+
+=item $dir
+
+(String) Verzeichnis, das erzeugt werden soll.
+
+=back
+
 =head4 Description
 
-Erzeuge Verzeichnis $dir. Existiert das Verzeichnis bereits oder ist
-$dir leer, ist der Aufruf eine Nulloperation.
+Erzeuge Verzeichnis $dir. Existiert das Verzeichnis bereits oder ist die
+Variable leer (Leerstring oder undef), ist der Aufruf eine Nulloperation.
 
 =cut
 
@@ -162,10 +200,21 @@ sub mkdir {
 
   $this->delete($path);
 
+=head4 Arguments
+
+=over 4
+
+=item $path
+
+(String) Pfad, der gelöscht werden soll.
+
+=back
+
 =head4 Description
 
-Lösche den Pfad aus dem Dateisystem, also die Datei oder das Verzeichnis
-einschließlich Inhalt. Es ist kein Fehler, wenn der Pfad nicht existiert.
+Lösche den Pfad aus dem Dateisystem, entferne also die Datei oder
+das Verzeichnis, letzteres einschließlich Inhalt. Es ist kein Fehler,
+wenn der Pfad nicht existiert.
 
 =cut
 
@@ -213,9 +262,19 @@ sub delete {
 
   $path = $this->expandTilde($path);
 
+=head4 Arguments
+
+=over 4
+
+=item $path
+
+(String) Pfad mit oder ohne Tilde am Anfang.
+
+=back
+
 =head4 Returns
 
-Pfad (String)
+(String) Pfad mit expandierter Tilde.
 
 =head4 Description
 

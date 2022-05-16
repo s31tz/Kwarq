@@ -25,7 +25,6 @@ our $VERSION = '0.001';
 
 use Kwarq::Path;
 use File::Temp ();
-use Quiq::Path;
 use Cwd ();
 
 # -----------------------------------------------------------------------------
@@ -97,8 +96,8 @@ Die Ausgabe des Kommandos auf STDERR.
 
 =head4 Description
 
-Führe Kommando $cmd aus und liefere die Ausgabe auf STDOUT, STDERR zurück.
-Im Fehlerfall wird eine Exception ausgelöst.
+Führe Kommando $cmd aus und liefere die Ausgabe auf STDOUT und STDERR
+zurück. Im Fehlerfall wird eine Exception geworfen.
 
 =cut
 
@@ -134,9 +133,22 @@ sub exec {
 
   $sh->cd($dir);
 
+=head4 Arguments
+
+=over 4
+
+=item $dir
+
+Verzeichnis, in das gewechselt werden soll.
+
+=back
+
 =head4 Description
 
-Wechsle in Arbeitsverzeichnis $dir.
+Wechsle in Arbeitsverzeichnis $dir. Im Fehlerfall wird eine Exception
+geworfen. Intern hält das Objekt einen Stack, auf dem die
+Verzeichniswechsel gespeichert sind. Mit $sh->back kann in das vorherige
+Verzeichnis zurückgewechselt werden.
 
 =cut
 
@@ -144,7 +156,7 @@ Wechsle in Arbeitsverzeichnis $dir.
 
 sub cd {
     my $self = shift;
-    my $dir = Quiq::Path->expandTilde(shift);
+    my $dir = Kwarq::Path->expandTilde(shift);
 
     my $cwd = Cwd::cwd;
     CORE::chdir $dir or do {
@@ -167,6 +179,12 @@ sub cd {
 
   $sh->back;
 
+=head4 Description
+
+Wechsele in das Verzeichnis zurück, aus dem heraus zuvor mit $sh->cd()
+in das aktuelle Verzeichnis gewechselt wurde. Gab es zuvor keinen
+Verzeichniswechsel, ist es eine Nulloperation.
+
 =cut
 
 # -----------------------------------------------------------------------------
@@ -178,6 +196,7 @@ sub back {
     unless ($dir) {
         return;
     }
+
     CORE::chdir $dir or do {
         $self->throw(
             'SHELL-00001: Cannot change directory',
