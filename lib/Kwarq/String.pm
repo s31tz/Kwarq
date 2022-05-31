@@ -28,6 +28,7 @@ use base qw/Kwarq::Object/;
 use v5.10;
 use strict;
 use warnings;
+use utf8;
 
 our $VERSION = '0.001';
 
@@ -142,6 +143,45 @@ sub replace {
     }
 
     return $str;
+}
+
+# -----------------------------------------------------------------------------
+
+=head3 umlautToAscii() - Wandele deutsche Umlaute und SZ nach ASCII
+
+=head4 Synopsis
+
+  $class->umlautToAscii(\$str);
+  $newStr = $class->umlautToAscii($str);
+
+=head4 Description
+
+Schreibe ä, Ä, ö, Ö, ü, Ü, ß in ae, Ae, oe, Oe, ue, Ue, ss um
+und liefere das Resultat zurück. Wird eine Stringreferenz angegeben,
+findet die Umschreibung "in-place" statt.
+
+Die Methode setzt voraus, dass der String korrekt dekodiert wurde.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub umlautToAscii {
+    my ($class,$arg) = @_;
+
+    my $ref = ref $arg? $arg: \$arg;
+
+    if (defined $$ref) {
+        $$ref =~ s/ä/ae/g;
+        $$ref =~ s/ö/oe/g;
+        $$ref =~ s/ü/ue/g;
+        $$ref =~ s/Ä/Ae/g;
+        $$ref =~ s/Ö/Oe/g;
+        $$ref =~ s/Ü/Ue/g;
+        $$ref =~ s/ß/ss/g;
+    }
+
+    return ref $arg? (): $$ref;
 }
 
 # -----------------------------------------------------------------------------
@@ -302,7 +342,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2021 Frank Seitz
+Copyright (C) 2022 Frank Seitz
 
 =head1 LICENSE
 
