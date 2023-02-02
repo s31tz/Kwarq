@@ -170,6 +170,53 @@ sub titles {
 
 # -----------------------------------------------------------------------------
 
+=head3 asCsv() - Ergebnismenge im CSV-Format
+
+=head4 Synopsis
+
+  $str = $tab->asCsv($colSep);
+
+=head4 Returns
+
+(String) CSV-Repräsentation
+
+=head4 Description
+
+Wandele die Ergebnismenge ins CSV-Format mit $colSep als
+Kolumnenseparator und liefere das Resultat zurück.
+Es werden nur die Daten geliefert ohne Titelzeile.
+
+=head4 Example
+
+print $fh join(';',map {uc} $tab->titles)."\n"
+print $fh $tab->asCsv(';');
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub asCsv {
+    my $self = shift;
+
+    my $str = '';
+
+    my @titles = $self->titles;
+    for my $row ($self->rows) {
+        my $i = 0;
+        for my $title (@titles) {
+            if ($i++) {
+               $str .= ';';
+            }
+            $str .= $row->$title;
+        }
+        $str .= "\n";
+    }
+
+    return $str;
+}
+
+# -----------------------------------------------------------------------------
+
 =head1 VERSION
 
 0.001
@@ -180,7 +227,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2022 Frank Seitz
+Copyright (C) 2023 Frank Seitz
 
 =head1 LICENSE
 
