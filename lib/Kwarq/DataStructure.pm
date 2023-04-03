@@ -33,7 +33,7 @@ use Scalar::Util ();
 
 =head4 Synopsis
 
-  $class->validate($ref0,$ref1);
+  $class->validate($ref0,$ref1,$sloppy);
 
 =head4 Arguments
 
@@ -47,6 +47,10 @@ Datenstruktur als Vorlage
 
 Datenstruktur
 
+=item $sloppy
+
+Wenn "wahr", nur Komponentenvergleich, kein Typvergleich.
+
 =back
 
 =cut
@@ -54,13 +58,13 @@ Datenstruktur
 # -----------------------------------------------------------------------------
 
 sub validate {
-    my ($class,$ref0,$ref1) = splice @_,0,3;
+    my ($class,$ref0,$ref1,$sloppy) = splice @_,0,4;
     my $keyA = shift // [];
 
     my $type1 = Scalar::Util::reftype($ref1) // '';
     my $type0 = Scalar::Util::reftype($ref0) // '';
 
-    if ($type1 ne $type0) {
+    if (!$sloppy && $type1 ne $type0) {
         $class->throw(
             'VALIDATE-00099: Type mismatch',
             Path => join('.',@$keyA),
@@ -68,22 +72,23 @@ sub validate {
         );
     }
 
-    if ($type1 eq '') {
-        # SCALAR
+    if ($type1 eq '' || $type1 eq 'CODE') {
+        # SCALAR, CODE
         return;
     }
     elsif ($type1 eq 'ARRAY') {
         if (ref($ref0->[0]) eq '' && ref($ref0->[1]) ne '') {
             # KEYVAL
             for (my $i = 0; $i < @$ref1; $i += 2) {
-                $class->validate($ref0->[0],$ref1->[$i]);
-                $class->validate($ref0->[1],$ref1->[$i+1],[@$keyA,$ref1->[$i]]);
+                $class->validate($ref0->[0],$ref1->[$i],$sloppy);
+                $class->validate($ref0->[1],$ref1->[$i+1],$sloppy,
+                    [@$keyA,$ref1->[$i]]);
             }
             return;
         }
         # ARRAY
         for (my $i = 0; $i < @$ref1; $i++) {
-            $class->validate($ref0->[0],$ref1->[$i],[@$keyA,"[$i]"]);
+            $class->validate($ref0->[0],$ref1->[$i],$sloppy,[@$keyA,"[$i]"]);
         }
         return;
     }
@@ -95,7 +100,8 @@ sub validate {
                     Path => join('.',@$keyA,$key),
                 );
             }
-            $class->validate($ref0->{$key},$ref1->{$key},[@$keyA,$key]);
+            $class->validate($ref0->{$key},$ref1->{$key},$sloppy,
+                [@$keyA,$key]);
         }
         return;
     }

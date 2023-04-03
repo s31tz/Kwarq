@@ -33,6 +33,7 @@ use warnings;
 our $VERSION = '0.001';
 
 use Kwarq::String;
+use Encode ();
 use Kwarq::Database::Row;
 use Kwarq::Database::ResultSet;
 
@@ -47,6 +48,21 @@ use Kwarq::Database::ResultSet;
 =head4 Synopsis
 
   $db = $class->new($dbh);
+  $db = $class->new($dbh,$encoding);
+
+=head4 Arguments
+
+=over 4
+
+=item $dbh
+
+(Object) DBI Database Handle.
+
+=item $encoding
+
+(String) Zeichensatz der Datenbank.
+
+=back
 
 =head4 Returns
 
@@ -61,7 +77,7 @@ Instantiiere ein Objekt der Klasse und liefere dieses zurück.
 # -----------------------------------------------------------------------------
 
 sub new {
-    my ($class,$dbh) = @_;
+    my ($class,$dbh,$encoding) = @_;
 
     $dbh->{'Warn'} = 0;
     $dbh->{'RaiseError'} = 1;
@@ -80,6 +96,7 @@ sub new {
 
     return $class->SUPER::new(
         dbh => $dbh,
+        encoding => $encoding,
     );
 }
 
@@ -112,6 +129,10 @@ Führe SQL-Statement $sql aus und liefere díe Statement-Handle zurück.
 sub exec {
     my $self = shift;
     my $sql = Kwarq::String->unindent(shift);
+
+    if (my $encoding = $self->{'encoding'}) {
+        $sql = Encode::encode($encoding,$sql);
+    }
 
     my $dbh = $self->{'dbh'};
 
@@ -158,11 +179,16 @@ sub select {
     my $self = shift;
     my $sql = Kwarq::String->unindent(shift);
 
+    my $encoding = $self->{'encoding'};
+
     my @rows;
     my $sth = $self->exec($sql);
     while (my $h = $sth->fetchrow_hashref('NAME_lc')) {
         for my $key (keys %$h) {
             $h->{$key} //= '';
+            if ($encoding) {
+                $h->{$key} = Encode::decode($encoding,$h->{$key});
+            }
         }
         push @rows,Kwarq::Database::Row->new($h);
     }
@@ -290,6 +316,10 @@ sub values {
     my $rowA = $dbh->selectall_arrayref($sql);
     my @values = map {$_->[0]} @$rowA;
 
+    if (my $encoding = $self->{'encoding'}) {
+        @values = map {Encode::decode($encoding,$_)} @values;
+    }
+
     return wantarray? @values: \@values;
 }
 
@@ -305,7 +335,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2022 Frank Seitz
+Copyright (C) 2023 Frank Seitz
 
 =head1 LICENSE
 

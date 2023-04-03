@@ -179,6 +179,40 @@ sub set {
 
 # -----------------------------------------------------------------------------
 
+=head3 add() - Füge Schlüssel/Wert-Paare hinzu
+
+=head4 Synopsis
+
+  $h->add(@keyVal);
+
+=head4 Description
+
+Füge die angegebenen Schlüssel/Wert-Paare zum Hash hinzu.
+
+Alternative Formulierung:
+
+  Hash::Util::unlock_keys(%$h);
+  $h->{$key} = $val;    # ein Schlüssel/Wert-Paar
+  @{$h}{@keys} = @vals; # mehrere Schlüssel/Wert-Paare
+  Hash::Util::lock_keys(%$h);
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub add {
+    my $self = shift;
+    # @_: @keyVal
+
+    $self->unlockKeys;
+    $self->set(@_);
+    $self->lockKeys;
+
+    return;
+}
+
+# -----------------------------------------------------------------------------
+
 =head3 lockKeys() - Sperre Hash
 
 =head4 Synopsis
@@ -341,7 +375,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2022 Frank Seitz
+Copyright (C) 2023 Frank Seitz
 
 =head1 LICENSE
 

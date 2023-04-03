@@ -101,7 +101,7 @@ sub test_validate : Test(0) {
         ],
     };
 
-    Kwarq::DataStructure->validate($ref0,$ref1);
+    Kwarq::DataStructure->validate($ref0,$ref1,1);
 }
 
 # -----------------------------------------------------------------------------
