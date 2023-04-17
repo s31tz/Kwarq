@@ -71,6 +71,40 @@ sub new {
 
 =head2 Objektmethoden
 
+=head3 columnWidth() - Länge des längsten Werts einer Kolumne
+
+=head4 Synopsis
+
+  $len = $tab->columnWidth($title);
+
+=head4 Returns
+
+(Integer) Länge
+
+=head4 Description
+
+Liefere die Länge des längsten Werts der Kolumne $title.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub columnWidth {
+    my ($self,$title) = @_;
+
+    my $maxLen = 0;
+    for my $row (@{$self->{'rowA'}}) {
+        my $len = length $row->{$title};
+        if ($len > $maxLen) {
+            $maxLen = $len;
+        }
+    }
+
+    return $maxLen;
+}
+
+# -----------------------------------------------------------------------------
+
 =head3 count() - Anzahl der Datensätze
 
 =head4 Synopsis

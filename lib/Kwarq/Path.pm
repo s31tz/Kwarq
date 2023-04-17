@@ -108,7 +108,7 @@ sub read {
 
 =head4 Synopsis
 
-  $this->write($file); # erzeuge leere Datei
+  $this->write($file); # schreibe leere Datei
   $this->write($file,$data);
   $this->write($file,\$data);
 
@@ -141,6 +141,48 @@ sub write {
 
     my $ref = ref $data? $data: \$data;
     File::Slurp::write_file($file,$$ref);
+
+    return;
+}
+
+# -----------------------------------------------------------------------------
+
+=head3 append() - Füge am Ende der Datei an
+
+=head4 Synopsis
+
+  $this->append($file,$data);
+  $this->append($file,\$data);
+
+=head4 Arguments
+
+=over 4
+
+=item $file
+
+(String) Datei, an die angehängt werden soll.
+
+=item $data
+
+(String) Die geschriebenen Daten
+
+=back
+
+=head4 Description
+
+Füge die Daten $data an Datei $file an.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub append {
+    my $this = shift;
+    my $file = $this->expandTilde(shift);
+    my $data = shift // '';
+
+    my $ref = ref $data? $data: \$data;
+    File::Slurp::write_file($file,{append=>1},$$ref);
 
     return;
 }
@@ -315,7 +357,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2022 Frank Seitz
+Copyright (C) 2023 Frank Seitz
 
 =head1 LICENSE
 

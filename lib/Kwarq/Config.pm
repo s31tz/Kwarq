@@ -118,6 +118,24 @@ Liste von Schlüsseln, die den Zugriffspfad zum Wert beschreiben.
 Ermittele den Wert der Komponente mit dem Zugriffspfad @keys. Existiert
 einer der Schlüssel nicht, liefere C<undef>.
 
+=head4 Example
+
+Konfiguration:
+
+  databases => {
+      M3 => {
+          server => 'as4d2',
+          user => 'SVCM3_03',
+          password => 'geheim',
+          encoding => 'UTF-8',
+          javaLibDir => '/home/ELBRUSFSE/m3/Z-3PO/javalib/dbd_jdbc',
+      },
+  },
+
+Zugriff:
+
+  $server = $conf->get('databases','M3','server')
+
 =cut
 
 # -----------------------------------------------------------------------------
