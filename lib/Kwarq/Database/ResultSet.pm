@@ -42,7 +42,7 @@ our $VERSION = '0.001';
 
 =head4 Synopsis
 
-  $tab = $class->new(\@titles,\@rows);
+  $tab = $class->new(\@titles,\@rows,$stmt,$duration);
 
 =head4 Returns
 
@@ -58,12 +58,13 @@ auf dieses Objekt zurück.
 # -----------------------------------------------------------------------------
 
 sub new {
-    my ($class,$titleA,$rowA,$stmt) = @_;
+    my ($class,$titleA,$rowA,$stmt,$duration) = @_;
 
     return $class->SUPER::new(
         titleA => $titleA,
         rowA => $rowA,
         stmt => $stmt,
+        duration => $duration,
     );
 }
 

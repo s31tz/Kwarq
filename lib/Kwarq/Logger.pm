@@ -327,7 +327,7 @@ sub write {
 
     $msg = Kwarq::String->unindent($msg);
     if ($msg =~ /\n/) { # mehrzeilige Meldung
-        $msg =~ s/^/| /mg;
+        # $msg =~ s/^/| /mg;
         $msg = "\n$msg\n";
     }
     else {

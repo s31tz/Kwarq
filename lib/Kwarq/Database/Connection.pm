@@ -36,6 +36,7 @@ use Kwarq::String;
 use Encode ();
 use Kwarq::Database::Row;
 use Kwarq::Database::ResultSet;
+use Time::HiRes ();
 
 # -----------------------------------------------------------------------------
 
@@ -179,6 +180,8 @@ sub select {
     my $self = shift;
     my $sql = Kwarq::String->unindent(shift);
 
+    my $t0 = scalar Time::HiRes::gettimeofday;
+
     my $encoding = $self->{'encoding'};
 
     my @rows;
@@ -197,7 +200,8 @@ sub select {
         return @rows;
     }
 
-    return Kwarq::Database::ResultSet->new($sth->{'NAME_lc'},\@rows,$sql);
+    return Kwarq::Database::ResultSet->new($sth->{'NAME_lc'},\@rows,
+        $sql,Time::HiRes::gettimeofday-$t0);
 }
 
 # -----------------------------------------------------------------------------
