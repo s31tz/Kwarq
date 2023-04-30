@@ -26,6 +26,7 @@ our $VERSION = '0.001';
 use Kwarq::String;
 use Kwarq::Path;
 use POSIX ();
+use Encode ();
 
 # -----------------------------------------------------------------------------
 
@@ -189,11 +190,11 @@ sub info {
 
 # -----------------------------------------------------------------------------
 
-=head3 warning() - Schreibe WARN Logmeldung
+=head3 warn() - Schreibe WARN Logmeldung
 
 =head4 Synopsis
 
-  $log->warning($msg);
+  $log->warn($msg);
 
 =head4 Arguments
 
@@ -214,7 +215,7 @@ Instantiierung angegeben - nach STDOUT (Terminal).
 
 # -----------------------------------------------------------------------------
 
-sub warning {
+sub warn {
     my ($self,$msg) = @_;
     $self->write('WARN',$msg);
 }
@@ -341,7 +342,8 @@ sub write {
         print $msg;
     }
 
-    Kwarq::Path->append($self->{'file'},$msg);
+    Kwarq::Path->append($self->{'file'},
+        Encode::encode('utf-8',$msg));
 
     return;
 }

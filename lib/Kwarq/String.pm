@@ -191,6 +191,7 @@ sub umlautToAscii {
 =head4 Synopsis
 
   $strOut = $this->unindent($strIn);
+  $strOut = $this->unindent($strIn,$lineContinuation);
 
 =head4 Arguments
 
@@ -199,6 +200,10 @@ sub umlautToAscii {
 =item $strIn
 
 String mit Einrückung oder umgebendem Whitespace.
+
+=item $lineContinuation
+
+Löse einen Backslash am Zeilenende als Zeilenfortsetzungszeichen auf.
 
 =back
 
@@ -260,6 +265,7 @@ ergibt ausgeführt als Wert für $text
 sub unindent {
     my $this = shift;
     my $str = shift // return undef;
+    my $lineContinuation = shift;
 
     $str =~ s/^\s*\n//; # Whitespace bis zur ersten nichtleeren Zeile entf.
     $str =~ s/\s+$//;   # Whitespace am Ende entfernen
@@ -286,6 +292,11 @@ sub unindent {
             # gemeinsame Einrückung von allen Zeilen entfernen
             $str =~ s/^$ind//gm;
         }
+    }
+
+    if ($lineContinuation) {
+        # Zeilenfortsetzungszeichen auflösen
+        $str =~ s|\\\n\s*||g;
     }
 
     return $str;
@@ -342,7 +353,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2022 Frank Seitz
+Copyright (C) 2023 Frank Seitz
 
 =head1 LICENSE
 

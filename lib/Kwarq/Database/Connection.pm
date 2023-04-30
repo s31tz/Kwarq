@@ -178,7 +178,7 @@ diese in einer Liste oder als Ergebnismengen-Objekt zurück.
 
 sub select {
     my $self = shift;
-    my $sql = Kwarq::String->unindent(shift);
+    my $sql = Kwarq::String->unindent(shift,1);
 
     my $t0 = scalar Time::HiRes::gettimeofday;
 
