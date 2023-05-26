@@ -50,6 +50,7 @@ use Time::HiRes ();
 
   $db = $class->new($dbh);
   $db = $class->new($dbh,$encoding);
+  $db = $class->new($dbh,$encoding,$log);
 
 =head4 Arguments
 
@@ -62,6 +63,10 @@ use Time::HiRes ();
 =item $encoding
 
 (String) Zeichensatz der Datenbank.
+
+=item $log
+
+(Object) Logger-Objekt
 
 =back
 
@@ -77,8 +82,10 @@ Instantiiere ein Objekt der Klasse und liefere dieses zurück.
 
 # -----------------------------------------------------------------------------
 
+my $RowNum = 0; # Ist während einer Fetchphase gesetzt
+
 sub new {
-    my ($class,$dbh,$encoding) = @_;
+    my ($class,$dbh,$encoding,$log) = @_;
 
     $dbh->{'Warn'} = 0;
     $dbh->{'RaiseError'} = 1;
@@ -92,12 +99,22 @@ sub new {
         if ($stmt) {
             $msg .= "\n$stmt\n";
         }
+        if ($RowNum) { # Fehler beim Fetchen (z.B. kaputter UTF-8 String)
+            if ($log) {
+                $log->warn(sprintf "Row: %s\n%s",($RowNum+1),$msg);
+            }
+            else {
+                warn sprintf "Row: %s\n%s",($RowNum+1),$msg;
+            }
+            return 1; # Keine Exception
+        }
         die $msg;
     };
 
     return $class->SUPER::new(
         dbh => $dbh,
         encoding => $encoding,
+        logger => $log,
     );
 }
 
@@ -186,7 +203,9 @@ sub select {
 
     my @rows;
     my $sth = $self->exec($sql);
+    $RowNum = 0;
     while (my $h = $sth->fetchrow_hashref('NAME_lc')) {
+        $RowNum++; # für Ausgabe von Fetchfehlern
         for my $key (keys %$h) {
             $h->{$key} //= '';
             if ($encoding) {
@@ -195,6 +214,7 @@ sub select {
         }
         push @rows,Kwarq::Database::Row->new($h);
     }
+    $RowNum = 0; # Fetchen beendet
 
     if (wantarray) {
         return @rows;

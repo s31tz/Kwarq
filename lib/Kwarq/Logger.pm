@@ -130,7 +130,7 @@ sub logger {
 
 =head4 Synopsis
 
-  $log->debug($msg);
+  $log->debug($msg,$noIndent);
 
 =head4 Arguments
 
@@ -139,6 +139,10 @@ sub logger {
 =item $msg
 
 (String) Logmeldung
+
+=item $noIndent
+
+(Boolean) Keine Einrückung einer mehrzeiligen $msg
 
 =back
 
@@ -152,8 +156,8 @@ Instantiierung angegeben - nach STDOUT (Terminal).
 # -----------------------------------------------------------------------------
 
 sub debug {
-    my ($self,$msg) = @_;
-    $self->write('DEBUG',$msg);
+    my ($self,$msg,$noIndent) = @_;
+    $self->write('DEBUG',$msg,$noIndent);
 }
 
 # -----------------------------------------------------------------------------
@@ -294,7 +298,7 @@ sub fatal {
 
 =head4 Synopsis
 
-  $log->write($level,$msg);
+  $log->write($level,$msg,$noIndent);
 
 =head4 Arguments
 
@@ -302,11 +306,15 @@ sub fatal {
 
 =item $level
 
-Level der Logmeldung
+(Enum) Level der Logmeldung
 
 =item $msg
 
 (String) Logmeldung
+
+=item $noIndent
+
+(Boolean) Rücke mehrzeilige Meldung nicht ein
 
 =back
 
@@ -320,7 +328,7 @@ angegeben - nach STDOUT (Terminal).
 # -----------------------------------------------------------------------------
 
 sub write {
-    my ($self,$level,$msg) = @_;
+    my ($self,$level,$msg,$noIndent) = @_;
 
     if ($Level{$level} < $self->{'level'}) {
         return;
@@ -328,7 +336,9 @@ sub write {
 
     $msg = Kwarq::String->unindent($msg);
     if ($msg =~ /\n/) { # mehrzeilige Meldung
-        # $msg =~ s/^/| /mg;
+        if (!$noIndent) {
+            $msg =~ s/^/| /mg;
+        }
         $msg = "\n$msg\n";
     }
     else {
