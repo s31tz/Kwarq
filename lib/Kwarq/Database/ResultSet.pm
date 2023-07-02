@@ -209,7 +209,18 @@ sub titles {
 
 =head4 Synopsis
 
+  $str = $tab->asCsv;
   $str = $tab->asCsv($colSep);
+
+=head4 Arguments
+
+=over 4
+
+=item $colSep (Default: ';')
+
+(String) Kolumnenseparator
+
+=back
 
 =head4 Returns
 
@@ -232,6 +243,7 @@ print $fh $tab->asCsv(';');
 
 sub asCsv {
     my $self = shift;
+    my $colSep = shift // ';';
 
     my $str = '';
 
@@ -242,7 +254,7 @@ sub asCsv {
             if ($i++) {
                $str .= ';';
             }
-            $str .= $row->$title;
+            $str .= $row->{$title};
         }
         $str .= "\n";
     }
