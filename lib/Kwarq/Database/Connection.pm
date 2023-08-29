@@ -122,6 +122,27 @@ sub new {
 
 =head2 Datenbank-Operationen
 
+=head3 disconnect() - Schließe Datenbankverbindung
+
+=head4 Synopsis
+
+  $db->disconnect;
+
+=head4 Description
+
+Baue die Datenbank-Verbindung ab. Das Verbindungs-Objekt existiert nach
+Aufruf der Methode nicht mehr.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub disconnect {
+    $_[0] = undef;
+}
+
+# -----------------------------------------------------------------------------
+
 =head3 exec() - Führe SQL-Statement aus
 
 =head4 Synopsis
@@ -201,18 +222,35 @@ sub select {
 
     my $encoding = $self->{'encoding'};
 
-    my @rows;
     my $sth = $self->exec($sql);
+
+    my (@titles,@rows);
     $RowNum = 0;
-    while (my $h = $sth->fetchrow_hashref('NAME_lc')) {
-        $RowNum++; # für Ausgabe von Fetchfehlern
-        for my $key (keys %$h) {
-            $h->{$key} //= '';
-            if ($encoding) {
-                $h->{$key} = Encode::decode($encoding,$h->{$key});
-            }
+    if ($encoding) {
+        for my $title (@{$sth->{'NAME_lc'}}) {
+            push @titles,Encode::decode($encoding,$title);
         }
-        push @rows,Kwarq::Database::Row->new($h);
+
+        while (my $arr = $sth->fetchrow_arrayref) {
+            $RowNum++; # für Ausgabe von Fetchfehlern
+            my @keyVal;
+            for (my $i = 0; $i < @$arr; $i++) {
+                my $val = $arr->[$i] // '';
+                push @keyVal,$titles[$i],Encode::decode($encoding,$val);
+            }
+            push @rows,Kwarq::Database::Row->new(@keyVal);
+        }
+    }
+    else {
+        @titles = @{$sth->{'NAME_lc'}};
+
+        while (my $h = $sth->fetchrow_hashref('NAME_lc')) {
+            $RowNum++; # für Ausgabe von Fetchfehlern
+            for my $key (keys %$h) {
+                $h->{$key} //= '';
+            }
+            push @rows,Kwarq::Database::Row->new($h);
+        }
     }
     $RowNum = 0; # Fetchen beendet
 
@@ -220,7 +258,7 @@ sub select {
         return @rows;
     }
 
-    return Kwarq::Database::ResultSet->new($sth->{'NAME_lc'},\@rows,
+    return Kwarq::Database::ResultSet->new(\@titles,\@rows,
         $sql,Time::HiRes::gettimeofday-$t0);
 }
 

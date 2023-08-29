@@ -130,6 +130,7 @@ sub logger {
 
 =head4 Synopsis
 
+  $log->debug($msg);
   $log->debug($msg,$noIndent);
 
 =head4 Arguments
@@ -140,7 +141,7 @@ sub logger {
 
 (String) Logmeldung
 
-=item $noIndent
+=item $noIndent (Default: 0)
 
 (Boolean) Keine Einrückung einer mehrzeiligen $msg
 
@@ -167,6 +168,7 @@ sub debug {
 =head4 Synopsis
 
   $log->info($msg);
+  $log->info($msg,$noIndent);
 
 =head4 Arguments
 
@@ -175,6 +177,10 @@ sub debug {
 =item $msg
 
 (String) Logmeldung
+
+=item $noIndent (Default: 0)
+
+(Boolean) Keine Einrückung einer mehrzeiligen $msg
 
 =back
 
@@ -188,8 +194,8 @@ Instantiierung angegeben - nach STDOUT (Terminal).
 # -----------------------------------------------------------------------------
 
 sub info {
-    my ($self,$msg) = @_;
-    $self->write('INFO',$msg);
+    my ($self,$msg,$noIndent) = @_;
+    $self->write('INFO',$msg,$noIndent);
 }
 
 # -----------------------------------------------------------------------------
@@ -199,6 +205,7 @@ sub info {
 =head4 Synopsis
 
   $log->warn($msg);
+  $log->warn($msg,$noIndent);
 
 =head4 Arguments
 
@@ -207,6 +214,10 @@ sub info {
 =item $msg
 
 (String) Logmeldung
+
+=item $noIndent (Default: 0)
+
+(Boolean) Keine Einrückung einer mehrzeiligen $msg
 
 =back
 
@@ -220,8 +231,8 @@ Instantiierung angegeben - nach STDOUT (Terminal).
 # -----------------------------------------------------------------------------
 
 sub warn {
-    my ($self,$msg) = @_;
-    $self->write('WARN',$msg);
+    my ($self,$msg,$noIndent) = @_;
+    $self->write('WARN',$msg,$noIndent);
 }
 
 # -----------------------------------------------------------------------------
@@ -231,6 +242,7 @@ sub warn {
 =head4 Synopsis
 
   $log->error($msg);
+  $log->error($msg,$noIndent);
 
 =head4 Arguments
 
@@ -239,6 +251,10 @@ sub warn {
 =item $msg
 
 (String) Logmeldung
+
+=item $noIndent (Default: 0)
+
+(Boolean) Keine Einrückung einer mehrzeiligen $msg
 
 =back
 
@@ -252,8 +268,8 @@ Instantiierung angegeben - nach STDOUT (Terminal).
 # -----------------------------------------------------------------------------
 
 sub error {
-    my ($self,$msg) = @_;
-    $self->write('ERROR',$msg);
+    my ($self,$msg,$noIndent) = @_;
+    $self->write('ERROR',$msg,$noIndent);
 }
 
 # -----------------------------------------------------------------------------
@@ -263,6 +279,7 @@ sub error {
 =head4 Synopsis
 
   $log->fatal($msg);
+  $log->fatal($msg,$noIndent);
 
 =head4 Arguments
 
@@ -271,6 +288,10 @@ sub error {
 =item $msg
 
 (String) Logmeldung
+
+=item $noIndent (Default: 0)
+
+(Boolean) Keine Einrückung einer mehrzeiligen $msg
 
 =back
 
@@ -285,8 +306,8 @@ die Ausführung des Programms>.
 # -----------------------------------------------------------------------------
 
 sub fatal {
-    my ($self,$msg) = @_;
-    $self->write('FATAL',$msg);
+    my ($self,$msg,$noIndent) = @_;
+    $self->write('FATAL',$msg,$noIndent);
     exit 99;
 }
 
@@ -345,7 +366,7 @@ sub write {
         $msg = " $msg\n";
     }
 
-    $msg = sprintf '%s %s %s%s',
+    $msg = sprintf '%s %6d %-5s%s',
         POSIX::strftime('%Y-%m-%d %H:%M:%S',localtime),$$,$level,$msg;
 
     if ($self->{'toTerm'}) {
