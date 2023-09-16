@@ -28,6 +28,7 @@ use warnings;
 our $VERSION = '0.001';
 
 use Kwarq::Path;
+use File::Temp ();
 use Encode ();
 
 # -----------------------------------------------------------------------------
@@ -43,6 +44,7 @@ use Encode ();
   $exitCode = $this->help;
   $exitCode = $this->help($exitCode);
   $exitCode = $this->help($exitCode,$msg);
+  $exitCode = $this->help($exitCode,$msg,$callback);
 
 =head4 Description
 
@@ -77,18 +79,35 @@ sub help {
     my $this = shift;
     my $exitCode = shift // 0;
     my $msg = shift // '';
+    my $callback = shift;
 
     # Encoding des POD-Dokuments ermitteln
 
-    my $podEncoding = 'UTF-8';
     my $code = Kwarq::Path->read($0);
+    my $podEncoding = 'UTF-8';
     if ($code =~ /^=encoding\s+(\S+)/m) {
         $podEncoding = $1;
     }
 
+    if ($callback) {
+        $code = $callback->($code);
+    }
+    my $fhTmp = File::Temp->new;
+    my $tmpFile = $fhTmp->filename;
+
+    open my $fh,'>',$tmpFile or $this->throw(
+        'PROGRAM-00099: Open for writing failed',
+        File => $tmpFile,
+    );
+    binmode $fh,':encoding(UTF-8)';
+    print $fh $code;
+    close $fh;
+
     # Doku erzeugen und dekodieren
 
-    my $text = -t STDOUT? qx/pod2text --overstrike $0/: qx/pod2text $0/;
+    # my $text = -t STDOUT? qx/pod2text --overstrike $0/: qx/pod2text $0/;
+    my $text = -t STDOUT? qx/pod2text --overstrike $tmpFile/:
+        qx/pod2text $tmpFile/;
     $text = Encode::decode($podEncoding,$text);
     $text =~ s/\n+$/\n/;
 
