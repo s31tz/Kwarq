@@ -88,6 +88,7 @@ sub help {
     if ($code =~ /^=encoding\s+(\S+)/m) {
         $podEncoding = $1;
     }
+    $code = Kwarq::Path->read($0,-decode=>$podEncoding);
 
     if ($callback) {
         $code = $callback->($code);
@@ -99,7 +100,7 @@ sub help {
         'PROGRAM-00099: Open for writing failed',
         File => $tmpFile,
     );
-    binmode $fh,':encoding(UTF-8)';
+    binmode $fh,":encoding($podEncoding)";
     print $fh $code;
     close $fh;
 

@@ -17,7 +17,9 @@ L<Kwarq::Hash>
 =head1 DESCRIPTION
 
 Ein Objekt der Klasse repräsentiert eine Ergebnismenge, bestehend
-aus allen Datensätzen einer Selektion zusammen mit den Kolumnentiteln.
+aus allen Datensätzen einer Selektion (rows) zusammen mit den
+Kolumnentiteln (titles), dem ausgeführten SQL-Statement (stmt)
+und der Ausführungsdauer (duration).
 
 =cut
 
@@ -70,64 +72,28 @@ sub new {
 
 # -----------------------------------------------------------------------------
 
-=head2 Objektmethoden
+=head2 Akzessoren
 
-=head3 columnWidth() - Länge des längsten Werts einer Kolumne
+=head3 duration() - Ausführungszeit
 
 =head4 Synopsis
 
-  $len = $tab->columnWidth($title);
+  $duration = $tab->duration;
 
 =head4 Returns
 
-(Integer) Länge
+(Float) Ausführungszeit
 
 =head4 Description
 
-Liefere die Länge des längsten Werts der Kolumne $title.
+Liefere die Dauer, die die Ausführungs des SQL-Statements gebraucht
+hat.
 
 =cut
 
 # -----------------------------------------------------------------------------
 
-sub columnWidth {
-    my ($self,$title) = @_;
-
-    my $maxLen = 0;
-    for my $row (@{$self->{'rowA'}}) {
-        my $len = length $row->{$title};
-        if ($len > $maxLen) {
-            $maxLen = $len;
-        }
-    }
-
-    return $maxLen;
-}
-
-# -----------------------------------------------------------------------------
-
-=head3 count() - Anzahl der Datensätze
-
-=head4 Synopsis
-
-  $n = $tab->count;
-
-=head4 Returns
-
-(Integer) Anzahl Datensätze.
-
-=head4 Description
-
-Liefere die Anzahl der Datensätze der Ergebnismenge.
-
-=cut
-
-# -----------------------------------------------------------------------------
-
-sub count {
-    my $self = shift;
-    return scalar @{$self->{'rowA'}};
-}
+# Kein Code, da automatisch erzeugte Attributmethode
 
 # -----------------------------------------------------------------------------
 
@@ -201,6 +167,67 @@ Liefere die Liste der Kolumnentitel der Ergebnismenge.
 sub titles {
     my $self = shift;
     return wantarray? @{$self->{'titleA'}}: $self->{'titleA'};
+}
+
+# -----------------------------------------------------------------------------
+
+=head2 Objektmethoden
+
+=head3 columnWidth() - Länge des längsten Werts einer Kolumne
+
+=head4 Synopsis
+
+  $len = $tab->columnWidth($title);
+
+=head4 Returns
+
+(Integer) Länge
+
+=head4 Description
+
+Liefere die Länge des längsten Werts der Kolumne $title.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub columnWidth {
+    my ($self,$title) = @_;
+
+    my $maxLen = 0;
+    for my $row (@{$self->{'rowA'}}) {
+        my $len = length $row->{$title};
+        if ($len > $maxLen) {
+            $maxLen = $len;
+        }
+    }
+
+    return $maxLen;
+}
+
+# -----------------------------------------------------------------------------
+
+=head3 count() - Anzahl der Datensätze
+
+=head4 Synopsis
+
+  $n = $tab->count;
+
+=head4 Returns
+
+(Integer) Anzahl Datensätze.
+
+=head4 Description
+
+Liefere die Anzahl der Datensätze der Ergebnismenge.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub count {
+    my $self = shift;
+    return scalar @{$self->{'rowA'}};
 }
 
 # -----------------------------------------------------------------------------

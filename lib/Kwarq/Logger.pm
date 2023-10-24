@@ -81,6 +81,7 @@ my %Level = (
     ERROR => 4,
     FATAL => 5,
 );
+my %LevelReverse = reverse %Level;
 
 sub new {
     my ($class,$level,$file,$toTerm) = @_;
@@ -120,6 +121,31 @@ sub logger {
     return $Logger // $class->throw(
         'LOGGER-00099: Logger object not instantiated',
     );
+}
+
+# -----------------------------------------------------------------------------
+
+=head3 level() - Liefere Level (Bezeichnung)
+
+=head4 Synopsis
+
+  $level = $log->level;
+
+=head4 Returns
+
+(String) Bezeichnung des Loglevel ('DEBUG', ...)
+
+=head4 Description
+
+Liefere die Bezeichnung des Loglevel.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub level {
+    my $self = shift;
+    return $LevelReverse{$self->{'level'}};
 }
 
 # -----------------------------------------------------------------------------

@@ -32,6 +32,7 @@ use warnings;
 
 our $VERSION = '0.001';
 
+use Scalar::Util ();
 use Hash::Util ();
 
 # -----------------------------------------------------------------------------
@@ -44,16 +45,26 @@ use Hash::Util ();
 
 =head4 Synopsis
 
-  $h = $class->new(@keyVal);
+  $h = $class->new(\@keys);
+  $h = $class->new(\@keys,$default);
   $h = $class->new($h);
+  $h = $class->new(@keyVal);
 
 =head4 Arguments
 
 =over 4
 
+=item @keys
+
+Liste an Schlüsseln
+
+=item $default
+
+Defaultwert für alle Keys
+
 =item @keyVal
 
-Liste von Schlüssel/Wert-Paaren.
+Liste von Schlüssel/Wert-Paaren
 
 =item $h
 
@@ -78,10 +89,17 @@ sub new {
     # @_: @keyVal -or- $h
 
     my $self;
-    if (@_ == 1) {
+    my $refType = Scalar::Util::reftype($_[0]);
+    if ($refType && $refType eq 'ARRAY') { # \@keys,$default
+        $self = bless {},$class;
+        for (@{$_[0]}) {
+            $self->{$_} = $_[1];
+        }
+    }
+    elsif (@_ == 1) { # $h
         $self = bless $_[0],$class;
     }
-    else {
+    else { # @keyVal
         $self = bless {@_},$class;
     }
     Hash::Util::lock_keys(%$self);
