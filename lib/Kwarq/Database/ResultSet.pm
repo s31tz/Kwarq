@@ -44,7 +44,30 @@ our $VERSION = '0.001';
 
 =head4 Synopsis
 
+  $tab = $class->new(\@titles,\@rows);
   $tab = $class->new(\@titles,\@rows,$stmt,$duration);
+
+=head4 Arguments
+
+=over 4
+
+=item @titles
+
+(Array of Strings) Liste der Kolumnnamen
+
+=item @rows
+
+(Array of Kwarq::Database::Row Objects) Liste der Datensätze
+
+=item $stmt (Default: '')
+
+(String) Ausgeführtes SQL-Statement
+
+=item $duration (Default: 0)
+
+Dauer der Statement-Ausführung
+
+=back
 
 =head4 Returns
 
@@ -65,8 +88,8 @@ sub new {
     return $class->SUPER::new(
         titleA => $titleA,
         rowA => $rowA,
-        stmt => $stmt,
-        duration => $duration,
+        stmt => $stmt // '',
+        duration => $duration // 0,
     );
 }
 

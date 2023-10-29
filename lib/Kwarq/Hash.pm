@@ -47,6 +47,7 @@ use Hash::Util ();
 
   $h = $class->new(\@keys);
   $h = $class->new(\@keys,$default);
+  $h = $class->new(\@keys,\@vals);
   $h = $class->new($h);
   $h = $class->new(@keyVal);
 
@@ -90,10 +91,19 @@ sub new {
 
     my $self;
     my $refType = Scalar::Util::reftype($_[0]);
-    if ($refType && $refType eq 'ARRAY') { # \@keys,$default
+    if ($refType && $refType eq 'ARRAY') {
         $self = bless {},$class;
-        for (@{$_[0]}) {
-            $self->{$_} = $_[1];
+        my $refType = Scalar::Util::reftype($_[1]);
+        if ($refType && $refType eq 'ARRAY') { # \@keys,\@vals
+            my $i = 0;
+            for (@{$_[0]}) {
+                $self->{$_} = $_[1]->[$i++];
+            }
+        }
+        else { # \@keys,$default
+            for (@{$_[0]}) {
+                $self->{$_} = $_[1];
+            }
         }
     }
     elsif (@_ == 1) { # $h
