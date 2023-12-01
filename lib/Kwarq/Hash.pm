@@ -49,6 +49,7 @@ use Hash::Util ();
   $h = $class->new(\@keys,$default);
   $h = $class->new(\@keys,\@vals);
   $h = $class->new($h);
+  $h = $class->new(undef);
   $h = $class->new(@keyVal);
 
 =head4 Arguments
@@ -67,9 +68,9 @@ Defaultwert für alle Keys
 
 Liste von Schlüssel/Wert-Paaren
 
-=item $h
+=item $h -or- undef
 
-Hash-Referenz
+Hash-Referenz, im Falle von undef auf einen leere Hash
 
 =back
 
@@ -107,7 +108,7 @@ sub new {
         }
     }
     elsif (@_ == 1) { # $h
-        $self = bless $_[0],$class;
+        $self = bless $_[0]? $_[0]: {},$class;
     }
     else { # @keyVal
         $self = bless {@_},$class;
