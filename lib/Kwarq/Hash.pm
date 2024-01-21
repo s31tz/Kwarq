@@ -242,6 +242,34 @@ sub add {
 
 # -----------------------------------------------------------------------------
 
+=head3 keyVal() - Liste von Schlüssel/Wert-Paaren
+
+=head4 Synopsis
+
+  @keyVal | $keyValA = $h->keyVal;
+
+=head4 Description
+
+Liefere die Liste der Schlüssel/Wert-Paare. Im Skalarkontext liefere eine
+Referenz auf die Liste.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub keyVal {
+    my $self = shift;
+
+    my @arr;
+    for my $key (sort keys %$self) {
+        push @arr,$key,$self->{$key};
+    }
+
+    return wantarray? @arr: \@arr;
+}
+
+# -----------------------------------------------------------------------------
+
 =head3 lockKeys() - Sperre Hash
 
 =head4 Synopsis
@@ -404,7 +432,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2023 Frank Seitz
+Copyright (C) 2024 Frank Seitz
 
 =head1 LICENSE
 
