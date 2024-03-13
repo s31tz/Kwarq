@@ -261,6 +261,7 @@ sub count {
 
   $str = $tab->asCsv;
   $str = $tab->asCsv($colSep);
+  $str = $tab->asCsv($colSep,$useQuotes);
 
 =head4 Arguments
 
@@ -269,6 +270,10 @@ sub count {
 =item $colSep (Default: ';')
 
 (String) Kolumnenseparator
+
+=item $useQuotes (Default: 0)
+
+(Boolean) Setze Werte in doppelte Anführungsstriche
 
 =back
 
@@ -294,6 +299,7 @@ print $fh $tab->asCsv(';');
 sub asCsv {
     my $self = shift;
     my $colSep = shift // ';';
+    my $useQuotes = shift // 0;
 
     my $str = '';
 
@@ -304,7 +310,11 @@ sub asCsv {
             if ($i++) {
                $str .= ';';
             }
-            $str .= $row->{$title};
+            my $val = $row->{$title};
+            if ($useQuotes) {
+                $val = qq|"$val"|;
+            }
+            $str .= $val;
         }
         $str .= "\n";
     }
@@ -324,7 +334,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2023 Frank Seitz
+Copyright (C) 2024 Frank Seitz
 
 =head1 LICENSE
 
