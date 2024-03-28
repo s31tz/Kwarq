@@ -58,6 +58,18 @@ Platzhalter/Wert-Paare
 
 =back
 
+=head4 Options
+
+=over 4
+
+=item -xml => $bool (Default: 0)
+
+Wandele & < > in den Daten in Entity-Schreibweise. In der Folge
+der Schlüssel/Wert-Paare @keyVal kann mittels der Option die
+Wandlung an- und -abgeschaltet werden.
+
+=back
+
 =head4 Returns
 
 String
@@ -79,9 +91,17 @@ sub replace {
     my ($this,$str) = splice @_,0,2;
     # @_: @keyVal
 
+    # Dynamische Option
+    my $xml = 0;
+
     while (@_) {
         my $key = shift;
         my $val = shift;
+
+        if ($key eq '-xml') {
+            $xml = $val;
+            next;
+        }
 
         if (!defined $val) {
             # Wenn Wert undef, keine Ersetzung. Die Existenz
@@ -91,7 +111,15 @@ sub replace {
         
         # wir entfernen Newlines am Ende des Werts
         $val =~ s/\n+$//;
-        
+
+        if ($xml) {
+            # Wir maskieren < > &
+
+            $val =~ s/&/&amp;/g;
+            $val =~ s/</&lt;/g;
+            $val =~ s/>/&gt;/g;
+        }
+
         my $exists = 0; # Zeigt an, ob Platzhalter im String vorkommt
 
         if ($val =~ tr/\n//) {
@@ -353,7 +381,7 @@ Frank Seitz, L<http://fseitz.de/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2023 Frank Seitz
+Copyright (C) 2024 Frank Seitz
 
 =head1 LICENSE
 
