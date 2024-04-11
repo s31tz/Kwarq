@@ -38,6 +38,47 @@ our $VERSION = '0.001';
 
 =head2 Klassenmethoden
 
+=head3 protectXmlContent() - Schütze XML-Daten
+
+=head4 Synopsis
+
+  $strOut = $this->protectXmlContent($strIn);
+
+=head4 Arguments
+
+=over 4
+
+=item $strIn
+
+Zeichenkette mit & < >
+
+=back
+
+=head4 Returns
+
+String
+
+=head4 Description
+
+Wandele & < > in $strIn in Entity-Schreibweise und liefere das Resultat
+zurück.
+
+=cut
+
+# -----------------------------------------------------------------------------
+
+sub protectXmlContent {
+    my ($this,$str) = @_;
+
+    $str =~ s/&/&amp;/g;
+    $str =~ s/</&lt;/g;
+    $str =~ s/>/&gt;/g;
+
+    return $str;
+}
+
+# -----------------------------------------------------------------------------
+
 =head3 replace() - Ersetze Platzhalter
 
 =head4 Synopsis
@@ -113,11 +154,7 @@ sub replace {
         $val =~ s/\n+$//;
 
         if ($xml) {
-            # Wir maskieren < > &
-
-            $val =~ s/&/&amp;/g;
-            $val =~ s/</&lt;/g;
-            $val =~ s/>/&gt;/g;
+            $val = $this->protectXmlContent($val);
         }
 
         my $exists = 0; # Zeigt an, ob Platzhalter im String vorkommt
